@@ -9,7 +9,7 @@ using RestaurantRaterAPI.Models;
 namespace RestaurantRaterAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class RestaurantController : ControllerBase
     {
         private RestaurantDbContext _context;
@@ -55,5 +55,25 @@ namespace RestaurantRaterAPI.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        public async Task<IActionResult> UpdateRestaurant(int id, RestaurantEdit model) {
+            var oldrestaurant = await _context.Restaurants.FindAsync(id);
+            if (oldrestaurant is null) {
+                return NotFound();
+            }
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            if (!string.IsNullOrEmpty(model.Name))
+            {
+                oldrestaurant.Name = model.Name;
+            }
+            if (!string.IsNullOrEmpty(model.Location))
+            {
+                oldrestaurant.Location = model.Location;
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }
