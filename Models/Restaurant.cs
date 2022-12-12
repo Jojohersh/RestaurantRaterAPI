@@ -9,12 +9,29 @@ namespace RestaurantRaterAPI.Models
     public class Restaurant
     {
         [Key]
-        public int id {get; set;}
+        public int id { get; set; }
         [Required]
         [MaxLength(100)]
-        public string Name {get; set;} = null!;
+        public string Name { get; set; } = null!;
         [Required]
         [MaxLength(100)]
-        public string Location {get; set;} = null!;
+        public string Location { get; set; } = null!;
+
+        public virtual List<Rating> Ratings { get; set; } = new List<Rating>();
+        public double averageRating
+        {
+            get
+            {
+                if (Ratings.Count == 0)
+                {
+                    return 0;
+                }
+                double total = 0.0;
+                foreach (Rating rating in Ratings) {
+                    total += rating.score;
+                }
+                return total / Ratings.Count;
+            }
+        }
     }
 }
