@@ -75,5 +75,19 @@ namespace RestaurantRaterAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteRestaurant(int id)
+        {
+            var restaurant = await _context.Restaurants.FindAsync(id);
+            if (restaurant is null) {
+                return NotFound();
+            }
+
+            _context.Restaurants.Remove(restaurant);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }
