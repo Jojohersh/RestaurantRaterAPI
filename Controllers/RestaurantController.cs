@@ -36,10 +36,17 @@ namespace RestaurantRaterAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRestaurants()
+        public async Task<IActionResult> GetAllRestaurants()
         {
             var restaurants = await _context.Restaurants.Include(r => r.Ratings).ToListAsync();
-            return Ok(restaurants);
+            // go through every restaurant and convert it to an easy to read RestaurantListItem
+            List<RestaurantListItem> restaurantList = restaurants.Select( r => new RestaurantListItem() {
+                Id = r.id,
+                Name = r.Name,
+                Location = r.Location,
+                averageRating = r.averageRating
+            }).ToList();
+            return Ok(restaurantList);
         }
 
         [HttpGet]
